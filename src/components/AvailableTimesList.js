@@ -101,7 +101,10 @@ const AvailableTimesList = ({
         {availableTimes.map((timeSlot, index) => (
           <button
             key={index}
-            onClick={() => onSelectTimeSlot && onSelectTimeSlot(timeSlot)}
+            onClick={() => {
+              console.log("تم الضغط على slot:", timeSlot);
+              onSelectTimeSlot && onSelectTimeSlot(timeSlot);
+            }}
             title="احجز هذا الوقت"
             className={`w-20 h-20 flex flex-col items-center justify-center rounded-full border text-base font-semibold transition-all duration-200 shadow-md
               bg-white

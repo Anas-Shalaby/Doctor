@@ -12,10 +12,10 @@ import {
   getEventTypes,
   getAvailableTimes,
   getDayRange,
+  saveAppointmentToSupabase,
 } from "@/services/calendlyServices";
 import DatePicker from "@/components/DatePicker";
 import AvailableTimesList from "@/components/AvailableTimesList";
-import { saveToQstash } from "@/services/qstashServices";
 
 export default function BookAppointment() {
   const t = useTranslations();
@@ -26,7 +26,7 @@ export default function BookAppointment() {
   const [selectedService, setSelectedService] = useState(
     preselectedService || ""
   );
-  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState("");
   const [isMounted, setIsMounted] = useState(false);
   // State for form fields
@@ -59,6 +59,9 @@ export default function BookAppointment() {
     reason: "",
   });
   const [zoomLink, setZoomLink] = useState("");
+  // 1. أضف state جديد لحفظ التاريخ والوقت معًا
+  const [selectedDateTime, setSelectedDateTime] = useState(null);
+  const [bookingConfirmed, setBookingConfirmed] = useState(false);
 
   const handleTimeSlotSelect = (slot) => {
     setSelectedTimeSlot(slot);
@@ -80,7 +83,7 @@ export default function BookAppointment() {
       !userFormData.nationality ||
       !userFormData.dob
     ) {
-      toast.error("يرجى ملء جميع الحقول المطلوبة");
+      toast.error(t("book.requiredFieldsError"));
       return;
     }
     if (selectedTimeSlot) {
@@ -183,9 +186,15 @@ export default function BookAppointment() {
     const dateToUse = dateParam || selectedDate;
     if (!dateToUse || !accessToken || !selectedEventType) return;
     setLoadingTimes(true);
-    setSubmitError(""); 
+    setSubmitError("");
     try {
-      const { startTime, endTime } = getDayRange(dateToUse);
+      // تأكد أن dateToUse كائن Date مع المنطقة الزمنية الصحيحة
+      let dateObj = dateToUse;
+      if (typeof dateToUse === "string") {
+        dateObj = new Date(dateToUse + "T00:00:00+03:00");
+      }
+      const { startTime, endTime } = getDayRange(dateObj);
+
       const response = await getAvailableTimes(
         selectedEventType,
         startTime,
@@ -240,6 +249,10 @@ export default function BookAppointment() {
     "تركيا",
     "أخرى",
   ];
+
+  const handleConfirmBooking = async () => {
+    setBookingConfirmed(true);
+  };
 
   return (
     <div>
@@ -346,7 +359,7 @@ export default function BookAppointment() {
                       !userFormData.nationality ||
                       !userFormData.dob
                     ) {
-                      toast.error("يرجى ملء جميع الحقول المطلوبة");
+                      toast.error(t("book.requiredFieldsError"));
                       return;
                     }
                     setStep(3);
@@ -490,8 +503,9 @@ export default function BookAppointment() {
                     }
                     minDate={new Date()}
                     onDaySelected={(date) => {
-                      setSelectedDate(date.toISOString().split("T")[0]);
-                      loadAvailableTimes(date);
+                      setSelectedDate(date); // احفظ كائن Date كامل
+                      setSelectedDateTime(null);
+                      // لا تستدعي loadAvailableTimes هنا
                     }}
                   >
                     <AvailableTimesList
@@ -507,87 +521,54 @@ export default function BookAppointment() {
                           (s) => s.id === selectedService
                         );
                         const startDate = new Date(slot.start_time);
-                        const formattedDate =
-                          startDate.toLocaleDateString("en-GB"); // 29/07/2025
-                        const formattedTime = startDate.toLocaleTimeString(
-                          "en-GB",
-                          { hour: "2-digit", minute: "2-digit" }
-                        ); // 20:00
-                        const formattedDateTime = `${formattedDate} ${formattedTime}`; // 29/07/2025 20:00
-
-                        // جلب رابط Zoom من Calendly
-                        let zoomMeetingLink = "";
+                        setSelectedDateTime(startDate); // احفظ التاريخ والوقت معًا
+                        const formattedDate = startDate
+                          .toISOString()
+                          .split("T")[0];
+                        const formattedTime = startDate
+                          .toTimeString()
+                          .slice(0, 5); // HH:mm
+                        // Debug logs
+                        console.log("selectedDate:", selectedDate);
+                        console.log("selectedDateTime:", selectedDateTime);
+                        console.log("startDate:", startDate);
+                        console.log("formattedDate:", formattedDate);
+                        console.log("formattedTime:", formattedTime);
+                        console.log("startDate ISO:", startDate.toISOString());
                         try {
-                          const events = await fetchScheduledEvents(
-                            userUri,
-                            accessToken
-                          );
-                          const event = events.collection.find(
-                            (ev) =>
-                              ev.start_time === slot.start_time &&
-                              ev.location?.type === "zoom_conference"
-                          );
-                          if (event && event.location?.join_url) {
-                            zoomMeetingLink = event.location.join_url;
-                          }
-                        } catch (err) {
-                          toast.error("تعذر جلب رابط Zoom تلقائيًا.");
-                        }
-                        const { data, error } = await supabase
-                          .from("appointments")
-                          .insert([
-                            {
-                              service_id: selectedService,
-                              service_name: serviceObj?.name || "",
-                              first_name: userFormData.firstName,
-                              last_name: userFormData.lastName,
-                              email: userFormData.email,
-                              phone: userFormData.phone,
-                              nationality: userFormData.nationality,
-                              date_of_birth: userFormData.dob,
-                              reason: userFormData.reason,
-                              appointment_date: selectedDate,
-                              appointment_time: formattedDateTime,
-                              price: serviceObj?.price || "",
-                              zoom_link: zoomMeetingLink,
-                            },
-                          ]);
-                        setIsSubmitting(false);
-
-                        if (error) {
-                          toast.error(
-                            error.message || "حدث خطأ أثناء حفظ الحجز"
-                          );
-                          return;
-                        }
-
-                        try {
-                          const result = await saveToQstash({
-                            name: userFormData.firstName,
-                            time: slot.start_time, // مرر الوقت بصيغة ISO
-                            service: serviceObj?.name || "",
+                          // فقط حفظ بيانات الحجز في Supabase بدون إنشاء event في Calendly
+                          await saveAppointmentToSupabase({
+                            service_id: selectedService,
+                            service_name: serviceObj?.name || "",
+                            first_name: userFormData.firstName,
+                            last_name: userFormData.lastName,
+                            email: userFormData.email,
+                            phone: userFormData.phone,
+                            nationality: userFormData.nationality,
+                            date_of_birth: userFormData.dob,
+                            reason: userFormData.reason,
+                            appointment_date: formattedDate,
+                            appointment_time: formattedTime,
+                            price: serviceObj?.price || "",
+                            status: "pending",
+                            created_at: new Date().toISOString(),
                           });
-                        } catch (e) {
-                          toast.error(
-                            "فشل إرسال البيانات إلى QStash: " +
-                              (e?.message || "خطأ غير معروف")
-                          );
-                          console.error("QStash queue error", e);
+                          toast.success(t("book.appointmentSuccess"));
+                          setStep(4);
+                          setUserFormData({
+                            firstName: "",
+                            lastName: "",
+                            email: "",
+                            phone: "",
+                            nationality: "",
+                            dob: "",
+                            reason: "",
+                          });
+                        } catch (error) {
+                          toast.error(error.message || t("book.bookingError"));
+                        } finally {
+                          setIsSubmitting(false);
                         }
-                        toast.success("تم حجز الموعد بنجاح");
-
-                        setZoomLink(zoomMeetingLink);
-                        setSelectedDate(null);
-                        setStep(4);
-                        setUserFormData({
-                          firstName: "",
-                          lastName: "",
-                          email: "",
-                          phone: "",
-                          nationality: "",
-                          dob: "",
-                          reason: "",
-                        });
                       }}
                     />
                   </DatePicker>
@@ -605,37 +586,61 @@ export default function BookAppointment() {
             {/* Step 4: WhatsApp/contact message */}
             {step === 4 && (
               <div className="text-center py-16">
-                <CheckCircle
-                  size={48}
-                  className="mx-auto mb-4 text-green-600"
-                />
-                <h2 className="text-2xl font-semibold text-green-700 mb-4">
-                  {t("book.contactSuccessTitle")}
-                </h2>
-                <p className="text-gray-700 mb-8">
-                  {zoomLink ? (
-                    <>
-                      تم الحجز بنجاح!
-                      <br />
-                      <a
-                        href={zoomLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="underline text-blue-600"
+                {bookingConfirmed ? (
+                  <div className="text-2xl font-semibold text-gray-700 mb-4">
+                    {t("book.thankYouMsg")}
+                  </div>
+                ) : (
+                  <>
+                    <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+                      {t("book.summary")}
+                    </h2>
+                    <div className="bg-gray-50 rounded-lg p-6 mb-6 text-right max-w-md mx-auto">
+                      <div>
+                        <b>{t("book.name")}:</b> {userFormData.firstName}{" "}
+                        {userFormData.lastName}
+                      </div>
+                      <div>
+                        <b>{t("book.phone")}:</b> {userFormData.phone}
+                      </div>
+                      <div>
+                        <b>{t("book.service")}:</b>{" "}
+                        {services.find((s) => s.id === selectedService)?.name ||
+                          selectedService}
+                      </div>
+                      <div>
+                        <b>{t("book.price")}:</b>{" "}
+                        {services.find((s) => s.id === selectedService)
+                          ?.price || "-"}{" "}
+                        {t("book.egp")}
+                      </div>
+                      <div>
+                        <b>{t("book.appointment")}:</b>{" "}
+                        {selectedDate &&
+                          selectedDate.toLocaleDateString("ar-EG")}{" "}
+                        {selectedDateTime &&
+                          selectedDateTime.toLocaleTimeString("ar-EG", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                      </div>
+                    </div>
+                    <div className="flex justify-center gap-4">
+                      <button
+                        className="btn btn-primary"
+                        onClick={handleConfirmBooking}
                       >
-                        اضغط هنا للانضمام إلى اجتماع Zoom
-                      </a>
-                    </>
-                  ) : (
-                    t("book.contactSuccessMsg", { phone })
-                  )}
-                </p>
-                <button
-                  className="btn btn-primary"
-                  onClick={() => window.location.reload()}
-                >
-                  {t("book.bookAnother")}
-                </button>
+                        {t("book.confirmBooking")}
+                      </button>
+                      <button
+                        className="btn btn-secondary"
+                        onClick={() => setStep(3)}
+                      >
+                        {t("book.editInfo")}
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             )}
           </div>

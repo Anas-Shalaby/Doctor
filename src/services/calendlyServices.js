@@ -110,9 +110,11 @@ export function formatDateForAPI(date) {
 export function getDayRange(date) {
   const startOfDay = new Date(date);
   startOfDay.setHours(0, 0, 0, 0);
+  startOfDay.setHours(startOfDay.getHours() + 3); // أضف 3 ساعات لتوقيت مصر
 
   const endOfDay = new Date(date);
   endOfDay.setHours(23, 59, 59, 999);
+  endOfDay.setHours(endOfDay.getHours() + 3);
 
   return {
     startTime: formatDateForAPI(startOfDay),
@@ -168,17 +170,12 @@ import { supabase } from "../utils/supabaseClient";
  * @param {Object} params - بيانات الموعد (name, phone, date, time, event_id ...)
  * @returns {Promise<Object>} نتيجة الإدخال
  */
-export async function saveAppointmentToSupabase({
-  name,
-  phone,
-  date,
-  time,
-  event_id,
-  ...rest
-}) {
-  const { data, error } = await supabase
-    .from("appointments")
-    .insert([{ name, phone, date, time, event_id, ...rest }]);
+export async function saveAppointmentToSupabase({ ...rest }) {
+  const { data, error } = await supabase.from("appointments").insert([
+    {
+      ...rest,
+    },
+  ]);
   if (error) throw error;
   return data;
 }
