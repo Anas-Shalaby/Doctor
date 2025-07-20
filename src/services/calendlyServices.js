@@ -119,3 +119,66 @@ export function getDayRange(date) {
     endTime: formatDateForAPI(endOfDay),
   };
 }
+
+/**
+ * Create a new event in Calendly
+ * @param {Object} params - {name, email, phone, startTime, eventTypeUri, accessToken}
+ * @returns {Promise<string>} event_id
+ */
+export async function createCalendlyEvent({
+  name,
+  email,
+  phone,
+  startTime,
+  eventTypeUri,
+  accessToken,
+}) {
+  const response = await fetch(`${CALENDLY_API_BASE}/scheduled_events`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      event_type: eventTypeUri,
+      invitees: [
+        {
+          email,
+          name,
+        },
+      ],
+      start_time: startTime, // ISO 8601
+      location: { type: "zoom" },
+      description: `Phone: ${phone}`,
+    }),
+  });
+  if (!response.ok) {
+    throw new Error(
+      `Failed to create event: ${response.status} ${response.statusText}`
+    );
+  }
+  const data = await response.json();
+  return data.resource?.id;
+}
+
+import { supabase } from "../utils/supabaseClient";
+
+/**
+ * Save appointment to Supabase with event_id
+ * @param {Object} params - بيانات الموعد (name, phone, date, time, event_id ...)
+ * @returns {Promise<Object>} نتيجة الإدخال
+ */
+export async function saveAppointmentToSupabase({
+  name,
+  phone,
+  date,
+  time,
+  event_id,
+  ...rest
+}) {
+  const { data, error } = await supabase
+    .from("appointments")
+    .insert([{ name, phone, date, time, event_id, ...rest }]);
+  if (error) throw error;
+  return data;
+}
