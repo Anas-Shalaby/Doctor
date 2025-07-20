@@ -1,0 +1,338 @@
+{
+  "header": {
+    "logo": "Dr/Amany Youssef",
+    "services": "Services",
+    "about": "About",
+    "contact": "Contact",
+    "book": "Book Appointment"
+  },
+
+  "hero": {
+    "title": "Professional psychological support when you need it most",
+    "subtitle": "Dr. Amany Johnson provides compassionate, evidence-based therapy to help you overcome challenges and achieve mental wellness.",
+    "cta1": "Book Free Consultation",
+    "cta2": "View Services",
+    "stats": {
+      "patients": "Patients Helped",
+      "years": "Years Experience",
+      "success": "Success Rate"
+    },
+    "doctorName": "Dr. Amany Youssef",
+    "doctorTitle": "Licensed Clinical Psychologist",
+    "doctorDegree": "PhD Psychology",
+    "doctorLicensed": "Licensed",
+    "feature1": {
+      "title": "Easy Scheduling",
+      "description": "Book appointments online 24/7"
+    },
+    "feature2": {
+      "title": "Video Sessions",
+      "description": "Secure online consultations"
+    },
+    "feature3": {
+      "title": "Confidential",
+      "description": "Your privacy is protected"
+    },
+    "feature4": {
+      "title": "Flexible Hours",
+      "description": "Evening and weekend slots"
+    }
+  },
+  "services": {
+    "title": "Comprehensive Mental Health Services",
+    "subtitle": "Professional psychological support tailored to your unique needs with the highest level of confidentiality and care.",
+    "bookSession": "Book Session",
+    "ctaTitle": "Not sure which service is right for you?",
+    "ctaDesc": "Book a free 15-minute consultation to discuss your needs and find the best treatment approach.",
+    "ctaBtn": "Schedule Free Consultation",
+    "items": [
+      {
+        "title": "Cognitive Behavioral Therapy",
+        "description": "Evidence-based approach to treating anxiety, depression, and other mental health conditions.",
+        "duration": "50 minutes",
+        "price": "$120"
+      },
+      {
+        "title": "Stress Management",
+        "description": "Learn effective techniques to manage stress and build resilience in your daily life.",
+        "duration": "45 minutes",
+        "price": "$100"
+      },
+      {
+        "title": "Couples Therapy",
+        "description": "Improve communication and strengthen relationships with professional guidance.",
+        "duration": "60 minutes",
+        "price": "$150"
+      },
+      {
+        "title": "Online Consultations",
+        "description": "Convenient video sessions from the comfort of your home with full confidentiality.",
+        "duration": "50 minutes",
+        "price": "$110"
+      },
+      {
+        "title": "Group Sessions",
+        "description": "Join supportive group therapy sessions for shared experiences and healing.",
+        "duration": "90 minutes",
+        "price": "$80"
+      },
+      {
+        "title": "Crisis Support",
+        "description": "Immediate support and intervention during mental health emergencies.",
+        "duration": "As needed",
+        "price": "$200"
+      }
+    ]
+  },
+  "about": {
+    "title": "About Dr. Amany Youssef",
+    "p1": "With over a decade of experience in clinical psychology, Dr. Amany Youssef is dedicated to providing compassionate, evidence-based mental health care. She specializes in cognitive behavioral therapy and has helped hundreds of individuals overcome their challenges.",
+    "p2": "Dr. Amany believes in creating a safe, non-judgmental space where clients can explore their thoughts and feelings while developing practical strategies for positive change.",
+    "specializationsTitle": "Areas of Specialization",
+    "specializations": [
+      "Anxiety Disorders",
+      "Depression",
+      "Stress Management",
+      "Relationship Issues",
+      "Trauma Recovery",
+      "Life Transitions",
+      "Work-Life Balance",
+      "Self-Esteem Building"
+    ],
+    "cta": "Schedule a Consultation",
+    "credentials": [
+      {
+        "title": "Licensed Clinical Psychologist",
+        "description": "State Board Certified since 2013"
+      },
+      {
+        "title": "PhD in Psychology",
+        "description": "Stanford University, 2012"
+      },
+      {
+        "title": "500+ Patients Treated",
+        "description": "Across various mental health conditions"
+      },
+      {
+        "title": "10+ Years Experience",
+        "description": "Specialized in cognitive behavioral therapy"
+      }
+    ]
+  },
+  "testimonials": {
+    "title": "What My Patients Say",
+    "subtitle": "Real experiences from people who have found healing and growth through professional psychological support.",
+    "stats": {
+      "satisfaction": "Patient Satisfaction",
+      "lives": "Lives Changed",
+      "years": "Years of Excellence"
+    },
+    "items": [
+      {
+        "name": "Jennifer M.",
+        "text": "Dr. Johnson helped me overcome my anxiety and gave me tools that I still use today. Her compassionate approach made all the difference.",
+        "location": "Los Angeles, CA"
+      },
+      {
+        "name": "Michael R.",
+        "text": "Professional, caring, and incredibly insightful. The online sessions were convenient and just as effective as in-person therapy.",
+        "location": "New York, NY"
+      },
+      {
+        "name": "Sarah K.",
+        "text": "Dr. Johnson helped save my marriage. Her couples therapy sessions gave us the communication skills we desperately needed.",
+        "location": "Chicago, IL"
+      },
+      {
+        "name": "David L.",
+        "text": "After struggling with depression for years, Dr. Johnson's cognitive behavioral therapy approach finally helped me find hope again.",
+        "location": "Austin, TX"
+      }
+    ]
+  },
+  "contact": {
+    "title": "Get In Touch",
+    "subtitle": "Ready to take the first step? Contact us to schedule your consultation or ask any questions about our services.",
+    "infoTitle": "Contact Information",
+    "info": [
+      {
+        "title": "Phone",
+        "info": "+1 (555) 123-4567",
+        "subtext": "Monday - Friday, 9 AM - 6 PM"
+      },
+      {
+        "title": "Email",
+        "info": "contact@drjohnsonpsych.com",
+        "subtext": "Response within 24 hours"
+      },
+      {
+        "title": "Office",
+        "info": "123 Wellness Avenue, Suite 200",
+        "subtext": "Los Angeles, CA 90210"
+      },
+      {
+        "title": "Hours",
+        "info": "Mon-Fri: 9 AM - 6 PM",
+        "subtext": "Weekend appointments available"
+      }
+    ],
+    "crisisTitle": "Crisis Support",
+    "crisisDesc": "If you're experiencing a mental health emergency, please call:",
+    "crisis911": "Emergency: 911",
+    "crisis988": "Crisis Hotline: 988",
+    "formTitle": "Send a Message",
+    "form": {
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Your first name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Your last name",
+      "email": "Email",
+      "emailPlaceholder": "your.email@example.com",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+1 (555) 123-4567",
+      "help": "How can we help you?",
+      "options": [
+        "Schedule a consultation",
+        "Ask about services",
+        "Insurance questions",
+        "General inquiry"
+      ],
+      "message": "Message",
+      "messagePlaceholder": "Tell us about your needs or any questions you have...",
+      "send": "Send Message"
+    },
+    "ctaTitle": "Start Your Journey Today",
+    "ctaDesc": "Book a free 15-minute consultation to discuss your needs",
+    "ctaBtn": "Book Free Consultation",
+    "quickTitle": "Immediate Support",
+    "quickDesc": "Call us directly for urgent concerns or questions",
+    "quickBtn": "Call (555) 123-4567"
+  },
+  "footer": {
+    "doctorName": "Dr. Amany Youssef",
+    "doctorTitle": "Clinical Psychology",
+    "quickLinksTitle": "Quick Links",
+    "quickLinks": ["Home", "Services", "About", "Contact", "Book Appointment"],
+    "servicesTitle": "Services",
+    "services": [
+      "Cognitive Behavioral Therapy",
+      "Stress Management",
+      "Couples Therapy",
+      "Online Consultations",
+      "Group Sessions",
+      "Crisis Support"
+    ],
+    "contactTitle": "Contact",
+    "phone": "+1 (555) 123-4567",
+    "email": "contact@drjohnsonpsych.com",
+    "address": "123 Wellness Avenue, Suite 200\nLos Angeles, CA 90210",
+    "hours": "Mon-Fri: 9 AM - 6 PM",
+    "bookAppointment": "Book Appointment",
+    "copyright": "© 2024 Dr. Amany Youssef Psychology Practice. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "hipaa": "HIPAA Notice"
+  },
+  "book": {
+    "steps": ["Service", "Date & Time", "Information", "Payment"],
+    "selectService": "Select a Service",
+    "chooseDateTime": "Choose Date & Time",
+    "selectDate": "Select Date",
+    "loadingCalendar": "Loading calendar...",
+    "selectTime": "Select Time",
+    "back": "Back",
+    "continue": "Continue",
+    "total": "total",
+    "yourInfo": "Your Information",
+    "firstName": "First Name",
+    "cardholderName": "Cardholder Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "loading": "Loading",
+    "phone": "Phone Number",
+    "contactSuccessTitle": "Contact Information",
+    "contactSuccessMsg": "You will receive a confirmation email shortly.",
+    "termsAndConditions": "Terms and Conditions",
+    "completeBooking": "Complete Booking",
+    "dob": "Date of Birth",
+    "reason": "Reason for Visit",
+    "reasonPlaceholder": "Brief description of what brings you to therapy (optional)",
+    "continueToPayment": "Continue to Payment",
+    "paymentInfo": "Payment Information",
+    "appointmentSummary": "Appointment Summary",
+    "service": "Service",
+    "date": "Date",
+    "time": "Time",
+    "price": "Price",
+    "cardDetails": "Card Details",
+    "cardNumber": "Card Number",
+    "expiry": "Expiry",
+    "cvc": "CVC",
+    "appointmentBooked": "Appointment Booked",
+    "payNow": "Pay Now",
+    "optional": "Optional",
+    "successTitle": "Appointment Booked!",
+    "note": "Note:",
+    "nationality": "Nationality",
+    "nationalitySelect": "Select Nationality",
+    "phoneNote": "We will use this number to contact you for any follow-up questions or concerns.",
+    "availableTimes": "Available Times",
+    "calendlyNote": "Clicking a time will open Calendly's booking page in a new tab where you can complete your appointment booking.",
+    "successMsg": "Your appointment has been successfully booked. You will receive a confirmation email shortly.",
+    "bookAnother": "Book Another Appointment",
+    "services": {
+      "cbt": {
+        "name": "Cognitive Behavioral Therapy",
+        "duration": "50 min",
+        "price": "200"
+      },
+      "stress": {
+        "name": "Stress Management",
+        "duration": "45 min",
+        "price": "100"
+      },
+      "couples": {
+        "name": "Couples Therapy",
+        "duration": "60 min",
+        "price": "150"
+      },
+      "online": {
+        "name": "Online Consultation",
+        "duration": "50 min",
+        "price": "110"
+      },
+      "group": {
+        "name": "Group Session",
+        "duration": "90 min",
+        "price": "80"
+      },
+      "crisis": {
+        "name": "Crisis Support",
+        "duration": "As needed",
+        "price": "200"
+      }
+    }
+  },
+  "chatbot": {
+    "title": "Smart Assistant",
+    "welcome": "Hello! How can I help you?",
+    "inputPlaceholder": "Type your message here...",
+    "send": "Send",
+    "autoReply": "Thank you for your message! You will get a reply soon, insha'Allah.",
+    "open": "Open chat",
+    "close": "Close chat",
+    "bubbleMessage": "Hello! How can I help you?",
+    "error": "An error occurred while connecting to the smart assistant. Please try again later.",
+    "introPrompt": "Hello! I am a smart assistant here to help you understand the website, answer any questions about Dr. Amany, or just talk if you need to vent. Dr. Amany is a psychological specialist dedicated to supporting Muslim women through challenges.",
+    "drInfo": "Dr. Amany is 29 years old, graduated from Benha University, Faculty of Education, Department of Psychological Education in 2018, then obtained her master's degree in specialized psychology in 2023, and is now pursuing her PhD. She has worked for over two years with many cases and aims to support Muslim women psychologically. She has over half a million followers on social media and her videos have surpassed 2 million views. Instagram: https://www.instagram.com/dr_amanyyousef/ ",
+    "suggestedQuestions": [
+      "Who is Dr. Amany?",
+      "How to book?",
+      "How to pay?",
+      "What services are offered?"
+    ],
+    "bookingSteps": "Booking steps:\n1- Click on the 'Book Appointment' button\n2- Choose the service you want\n3- Enter your personal information\n4- Select the date and time you prefer.",
+    "paymentSteps": "How to pay?\n1- You will receive a WhatsApp message from Dr. Amany's team\n2- The team will handle your payment in the way that suits you best.",
+    "servicesList": "Types of services offered:\n- Cognitive Behavioral Therapy\n- Stress Management\n- Group Sessions\n- Couples Therapy\n- Online Consultation\n- Crisis Support"
+  }
+}
