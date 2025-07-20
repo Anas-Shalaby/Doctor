@@ -3,6 +3,7 @@
 import { Award, BookOpen, Users, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 export default function About() {
   const t = useTranslations();
@@ -90,9 +91,12 @@ export default function About() {
             <div className="bg-gray-50 rounded-2xl p-8 mb-8">
               <div className="aspect-[3/4] bg-gray-100 rounded-xl flex items-center justify-center mb-6">
                 <div className="text-center">
-                  <img
-                    src="images/WhatsApp Image 2025-04-01 at 19.08.25.jpeg"
+                  <Image
+                    src="/images/WhatsApp Image 2025-04-01 at 19.08.25.jpeg"
                     alt="Dr / Amany Youssef image"
+                    width={400}
+                    height={400}
+                    className="w-full h-full object-cover rounded-xl"
                   />
                 </div>
               </div>

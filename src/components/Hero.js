@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Calendar, MessageCircle, Shield, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 export default function Hero() {
   const t = useTranslations();
@@ -31,9 +32,9 @@ export default function Hero() {
   ];
 
   return (
-    <section className="bg-white section">
+    <section className="bg-white ">
       <div className="container">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-16 items-start">
           {/* Left Content */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -94,9 +95,12 @@ export default function Hero() {
             <div className="bg-gray-50 rounded-2xl p-8">
               <div className="aspect-[4/5] bg-gray-100 rounded-xl flex items-center justify-center mb-6">
                 <div className="text-center">
-                  <img
-                    src="images/WhatsApp Image 2025-06-07 at 20.23.24.jpeg"
+                  <Image
+                    src="/images/WhatsApp Image 2025-07-20 at 19.15.58.jpeg"
                     alt="Amany Youssef"
+                    width={500}
+                    height={400}
+                    className="object-cover rounded-xl"
                   />
                 </div>
               </div>

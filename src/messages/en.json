@@ -39,56 +39,28 @@
     }
   },
   "services": {
-    "title": "Comprehensive Mental Health Services",
-    "subtitle": "Professional psychological support tailored to your unique needs with the highest level of confidentiality and care.",
+    "title": "Our Services",
+    "consultation": "Psychological Consultation",
+    "consultation_desc": "Individual consultation sessions with certified specialists.",
+    "therapy": "Behavioral Therapy",
+
     "bookSession": "Book Session",
-    "ctaTitle": "Not sure which service is right for you?",
-    "ctaDesc": "Book a free 15-minute consultation to discuss your needs and find the best treatment approach.",
-    "ctaBtn": "Schedule Free Consultation",
-    "items": [
-      {
-        "title": "Cognitive Behavioral Therapy",
-        "description": "Evidence-based approach to treating anxiety, depression, and other mental health conditions.",
-        "duration": "50 minutes",
-        "price": "$120"
-      },
-      {
-        "title": "Stress Management",
-        "description": "Learn effective techniques to manage stress and build resilience in your daily life.",
-        "duration": "45 minutes",
-        "price": "$100"
-      },
-      {
-        "title": "Couples Therapy",
-        "description": "Improve communication and strengthen relationships with professional guidance.",
-        "duration": "60 minutes",
-        "price": "$150"
-      },
-      {
-        "title": "Online Consultations",
-        "description": "Convenient video sessions from the comfort of your home with full confidentiality.",
-        "duration": "50 minutes",
-        "price": "$110"
-      },
-      {
-        "title": "Group Sessions",
-        "description": "Join supportive group therapy sessions for shared experiences and healing.",
-        "duration": "90 minutes",
-        "price": "$80"
-      },
-      {
-        "title": "Crisis Support",
-        "description": "Immediate support and intervention during mental health emergencies.",
-        "duration": "As needed",
-        "price": "$200"
-      }
-    ]
+    "ctaTitle": "Start Your Journey Today",
+    "ctaDesc": "Book a free 15-minute consultation to discuss your needs",
+    "ctaBtn": "Book Free Consultation",
+    "subtitle": "Dr. Amany Youssef provides compassionate, evidence-based therapy to help you overcome challenges and achieve mental wellness.",
+    "therapy_desc": "Comprehensive therapeutic programs to improve mental health."
   },
   "about": {
     "title": "About Dr. Amany Youssef",
+    "name": "Dr. Amany Youssef",
     "p1": "With over a decade of experience in clinical psychology, Dr. Amany Youssef is dedicated to providing compassionate, evidence-based mental health care. She specializes in cognitive behavioral therapy and has helped hundreds of individuals overcome their challenges.",
     "p2": "Dr. Amany believes in creating a safe, non-judgmental space where clients can explore their thoughts and feelings while developing practical strategies for positive change.",
     "specializationsTitle": "Areas of Specialization",
+    "desc": "Specialist in Cognitive Behavioral Therapy",
+    "specialization": "Phd in Psychology",
+    "book": "Book Appointment",
+    "credentialsTitle": "Credentials & Licenses",
     "specializations": [
       "Anxiety Disorders",
       "Depression",
@@ -157,18 +129,18 @@
     "info": [
       {
         "title": "Phone",
-        "info": "+1 (555) 123-4567",
-        "subtext": "Monday - Friday, 9 AM - 6 PM"
+        "info": "+20 106 827 2158",
+        "subtext": "Friday - thursday, 9 am - 6 pm"
       },
       {
         "title": "Email",
-        "info": "contact@drjohnsonpsych.com",
+        "info": "amany.shalaby34@gmail.com",
         "subtext": "Response within 24 hours"
       },
       {
         "title": "Office",
-        "info": "123 Wellness Avenue, Suite 200",
-        "subtext": "Los Angeles, CA 90210"
+        "info": "Elshrouk St, 1st Floor, Building 5, Room 7",
+        "subtext": "Egypt , new Cairo"
       },
       {
         "title": "Hours",
@@ -206,7 +178,8 @@
     "ctaBtn": "Book Free Consultation",
     "quickTitle": "Immediate Support",
     "quickDesc": "Call us directly for urgent concerns or questions",
-    "quickBtn": "Call (555) 123-4567"
+    "quickBtn": "+20 106 827 2158",
+    "bookAppointment": "Book Appointment"
   },
   "footer": {
     "doctorName": "Dr. Amany Youssef",
@@ -223,7 +196,7 @@
       "Crisis Support"
     ],
     "contactTitle": "Contact",
-    "phone": "+1 (555) 123-4567",
+    "phone": "+20 106 827 2158",
     "email": "contact@drjohnsonpsych.com",
     "address": "123 Wellness Avenue, Suite 200\nLos Angeles, CA 90210",
     "hours": "Mon-Fri: 9 AM - 6 PM",
