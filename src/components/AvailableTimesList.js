@@ -102,7 +102,6 @@ const AvailableTimesList = ({
           <button
             key={index}
             onClick={() => {
-              console.log("تم الضغط على slot:", timeSlot);
               onSelectTimeSlot && onSelectTimeSlot(timeSlot);
             }}
             title="احجز هذا الوقت"

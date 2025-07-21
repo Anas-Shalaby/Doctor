@@ -17,9 +17,18 @@ import {
 import DatePicker from "@/components/DatePicker";
 import AvailableTimesList from "@/components/AvailableTimesList";
 
+// دالة توليد كود حجز قصير
+function generateBookingCode(length = 6) {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let code = "";
+  for (let i = 0; i < length; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
+}
+
 export default function BookAppointment() {
   const t = useTranslations();
-  const router = useRouter();
   const searchParams = useSearchParams();
   const preselectedService = searchParams.get("service");
   const [step, setStep] = useState(preselectedService ? 2 : 1);
@@ -27,15 +36,8 @@ export default function BookAppointment() {
     preselectedService || ""
   );
   const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState("");
   const [isMounted, setIsMounted] = useState(false);
-  // State for form fields
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [dob, setDob] = useState("");
-  const [reason, setReason] = useState("");
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [availableTimes, setAvailableTimes] = useState([]);
@@ -48,7 +50,6 @@ export default function BookAppointment() {
     "https://api.calendly.com/event_types/da129733-fe84-4fa8-9541-57f03a4d0765"
   );
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
-  const [showUserForm, setShowUserForm] = useState(false);
   const [userFormData, setUserFormData] = useState({
     firstName: "",
     lastName: "",
@@ -58,52 +59,15 @@ export default function BookAppointment() {
     dob: "",
     reason: "",
   });
-  const [zoomLink, setZoomLink] = useState("");
   // 1. أضف state جديد لحفظ التاريخ والوقت معًا
   const [selectedDateTime, setSelectedDateTime] = useState(null);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
-
-  const handleTimeSlotSelect = (slot) => {
-    setSelectedTimeSlot(slot);
-    setShowUserForm(true);
-  };
+  // أضف state جديد لحفظ كود الحجز بعد التأكيد
+  const [confirmedBookingCode, setConfirmedBookingCode] = useState("");
 
   const handleUserFormChange = (e) => {
     const { name, value } = e.target;
     setUserFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleUserFormSubmit = (e) => {
-    e.preventDefault();
-    // تحقق من الحقول المطلوبة
-    if (
-      !userFormData.firstName ||
-      !userFormData.lastName ||
-      !userFormData.phone ||
-      !userFormData.nationality ||
-      !userFormData.dob
-    ) {
-      toast.error(t("book.requiredFieldsError"));
-      return;
-    }
-    if (selectedTimeSlot) {
-      window.open(
-        selectedTimeSlot.scheduling_url,
-        "_blank",
-        "noopener,noreferrer"
-      );
-    }
-    setShowUserForm(false);
-    setSelectedTimeSlot(null);
-    setUserFormData({
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      nationality: "",
-      dob: "",
-      reason: "",
-    });
   };
 
   const services = [
@@ -147,8 +111,8 @@ export default function BookAppointment() {
 
   const steps = [
     t("book.steps.0"),
-    t("book.steps.2"),
-    t("book.steps.1"),
+    t("book.steps.1"), // اختيار التاريخ والوقت
+    t("book.steps.2"), // إدخال البيانات الشخصية
     t("book.steps.3"),
   ];
   useEffect(() => {
@@ -250,10 +214,6 @@ export default function BookAppointment() {
     "أخرى",
   ];
 
-  const handleConfirmBooking = async () => {
-    setBookingConfirmed(true);
-  };
-
   return (
     <div>
       <Header />
@@ -345,6 +305,61 @@ export default function BookAppointment() {
             {step === 2 && (
               <div>
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+                  {t("book.chooseDateTime")}
+                </h2>
+                <div className="mb-8">
+                  <h3 className="font-medium text-gray-900 mb-4">
+                    {t("book.selectDate")}
+                  </h3>
+                  <DatePicker
+                    selectedDate={selectedDate ? new Date(selectedDate) : null}
+                    onDateSelect={(date) =>
+                      setSelectedDate(date.toISOString().split("T")[0])
+                    }
+                    minDate={new Date()}
+                    onDaySelected={(date) => {
+                      setSelectedDate(date); // احفظ كائن Date كامل
+                      setSelectedDateTime(null);
+                    }}
+                  >
+                    <AvailableTimesList
+                      availableTimes={availableTimes}
+                      loading={loadingTimes}
+                      error={submitError}
+                      selectedDate={
+                        selectedDate ? new Date(selectedDate) : null
+                      }
+                      onSelectTimeSlot={async (slot) => {
+                        setSelectedTimeSlot(slot);
+                        setSelectedDateTime(new Date(slot.start_time));
+                      }}
+                    />
+                  </DatePicker>
+                </div>
+                <div className="flex justify-between mt-6">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => setStep(1)}
+                  >
+                    {t("book.back")}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    disabled={!selectedTimeSlot}
+                    onClick={() => setStep(3)}
+                  >
+                    {t("book.continue")}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Step 3: Personal Information */}
+            {step === 3 && (
+              <div>
+                <h2 className="text-2xl font-semibold text-gray-900 mb-6">
                   {t("book.yourInfo")}
                 </h2>
                 <form
@@ -362,7 +377,11 @@ export default function BookAppointment() {
                       toast.error(t("book.requiredFieldsError"));
                       return;
                     }
-                    setStep(3);
+                    if (!selectedTimeSlot || !selectedDateTime) {
+                      toast.error(t("book.selectTimeError"));
+                      return;
+                    }
+                    setStep(4);
                   }}
                 >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -377,7 +396,6 @@ export default function BookAppointment() {
                         required
                         value={userFormData.firstName}
                         onChange={handleUserFormChange}
-                        // placeholder={t("book.firstNamePlaceholder")}/
                       />
                     </div>
                     <div>
@@ -391,7 +409,6 @@ export default function BookAppointment() {
                         required
                         value={userFormData.lastName}
                         onChange={handleUserFormChange}
-                        // placeholder={t("book.lastNamePlaceholder")}
                       />
                     </div>
                   </div>
@@ -405,7 +422,6 @@ export default function BookAppointment() {
                       className="input"
                       value={userFormData.email}
                       onChange={handleUserFormChange}
-                      // placeholder={t("book.emailPlaceholder/")}
                     />
                   </div>
                   <div>
@@ -419,7 +435,6 @@ export default function BookAppointment() {
                       required
                       value={userFormData.phone}
                       onChange={handleUserFormChange}
-                      // placeholder={t("book.phonePlaceholder")}
                     />
                     <span className="text-xs text-gray-500">
                       {t("book.phoneNote")}
@@ -474,7 +489,7 @@ export default function BookAppointment() {
                     <button
                       type="button"
                       className="btn btn-secondary"
-                      onClick={() => setStep(1)}
+                      onClick={() => setStep(2)}
                     >
                       {t("book.back")}
                     </button>
@@ -485,110 +500,26 @@ export default function BookAppointment() {
                 </form>
               </div>
             )}
-
-            {/* Step 3: Personal Information */}
-            {step === 3 && (
-              <div>
-                <h2 className="text-2xl font-semibold text-gray-900 mb-6">
-                  {t("book.chooseDateTime")}
-                </h2>
-                <div className="mb-8">
-                  <h3 className="font-medium text-gray-900 mb-4">
-                    {t("book.selectDate")}
-                  </h3>
-                  <DatePicker
-                    selectedDate={selectedDate ? new Date(selectedDate) : null}
-                    onDateSelect={(date) =>
-                      setSelectedDate(date.toISOString().split("T")[0])
-                    }
-                    minDate={new Date()}
-                    onDaySelected={(date) => {
-                      setSelectedDate(date); // احفظ كائن Date كامل
-                      setSelectedDateTime(null);
-                      // لا تستدعي loadAvailableTimes هنا
-                    }}
-                  >
-                    <AvailableTimesList
-                      availableTimes={availableTimes}
-                      loading={loadingTimes}
-                      error={submitError}
-                      selectedDate={
-                        selectedDate ? new Date(selectedDate) : null
-                      }
-                      onSelectTimeSlot={async (slot) => {
-                        setIsSubmitting(true);
-                        const serviceObj = services.find(
-                          (s) => s.id === selectedService
-                        );
-                        const startDate = new Date(slot.start_time);
-                        setSelectedDateTime(startDate); // احفظ التاريخ والوقت معًا
-                        const formattedDate = startDate
-                          .toISOString()
-                          .split("T")[0];
-                        const formattedTime = startDate
-                          .toTimeString()
-                          .slice(0, 5); // HH:mm
-                        // Debug logs
-                        console.log("selectedDate:", selectedDate);
-                        console.log("selectedDateTime:", selectedDateTime);
-                        console.log("startDate:", startDate);
-                        console.log("formattedDate:", formattedDate);
-                        console.log("formattedTime:", formattedTime);
-                        console.log("startDate ISO:", startDate.toISOString());
-                        try {
-                          // فقط حفظ بيانات الحجز في Supabase بدون إنشاء event في Calendly
-                          await saveAppointmentToSupabase({
-                            service_id: selectedService,
-                            service_name: serviceObj?.name || "",
-                            first_name: userFormData.firstName,
-                            last_name: userFormData.lastName,
-                            email: userFormData.email,
-                            phone: userFormData.phone,
-                            nationality: userFormData.nationality,
-                            date_of_birth: userFormData.dob,
-                            reason: userFormData.reason,
-                            appointment_date: formattedDate,
-                            appointment_time: formattedTime,
-                            price: serviceObj?.price || "",
-                            status: "pending",
-                            created_at: new Date().toISOString(),
-                          });
-                          toast.success(t("book.appointmentSuccess"));
-                          setStep(4);
-                          setUserFormData({
-                            firstName: "",
-                            lastName: "",
-                            email: "",
-                            phone: "",
-                            nationality: "",
-                            dob: "",
-                            reason: "",
-                          });
-                        } catch (error) {
-                          toast.error(error.message || t("book.bookingError"));
-                        } finally {
-                          setIsSubmitting(false);
-                        }
-                      }}
-                    />
-                  </DatePicker>
-                </div>
-                <div className="flex justify-between">
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => setStep(2)}
-                  >
-                    {t("book.back")}
-                  </button>
-                </div>
-              </div>
-            )}
             {/* Step 4: WhatsApp/contact message */}
             {step === 4 && (
               <div className="text-center py-16">
                 {bookingConfirmed ? (
                   <div className="text-2xl font-semibold text-gray-700 mb-4">
                     {t("book.thankYouMsg")}
+                    {bookingConfirmed && confirmedBookingCode && (
+                      <div className="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
+                        <div className="text-lg font-semibold text-yellow-800 mb-2">
+                          رقم الحجز الخاص بك:
+                        </div>
+                        <div className="text-3xl font-mono font-bold text-yellow-900 tracking-widest mb-3 select-all">
+                          {confirmedBookingCode}
+                        </div>
+                        <div className="text-yellow-700 text-base font-medium">
+                          يرجى حفظ هذا الرقم جيدًا، ستحتاج إليه عند المتابعة أو
+                          الاستفسار عن حجزك.
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <>
@@ -625,16 +556,69 @@ export default function BookAppointment() {
                           })}
                       </div>
                     </div>
+
                     <div className="flex justify-center gap-4">
                       <button
                         className="btn btn-primary"
-                        onClick={handleConfirmBooking}
+                        onClick={async () => {
+                          setIsSubmitting(true);
+                          try {
+                            const serviceObj = services.find(
+                              (s) => s.id === selectedService
+                            );
+                            const startDate = selectedDateTime;
+                            const formattedDate = startDate
+                              .toISOString()
+                              .split("T")[0];
+                            const formattedTime = startDate
+                              .toTimeString()
+                              .slice(0, 5); // HH:mm
+                            const bookingCode = generateBookingCode();
+                            await saveAppointmentToSupabase({
+                              service_id: selectedService,
+                              service_name: serviceObj?.name || "",
+                              first_name: userFormData.firstName,
+                              last_name: userFormData.lastName,
+                              email: userFormData.email,
+                              phone: userFormData.phone,
+                              nationality: userFormData.nationality,
+                              date_of_birth: userFormData.dob,
+                              reason: userFormData.reason,
+                              appointment_date: formattedDate,
+                              appointment_time: formattedTime,
+                              price: serviceObj?.price || "",
+                              status: "pending",
+                              created_at: new Date().toISOString(),
+                              booking_code: bookingCode,
+                            });
+                            toast.success(t("book.appointmentSuccess"));
+                            setBookingConfirmed(true);
+                            setConfirmedBookingCode(bookingCode);
+                            setUserFormData({
+                              firstName: "",
+                              lastName: "",
+                              email: "",
+                              phone: "",
+                              nationality: "",
+                              dob: "",
+                              reason: "",
+                            });
+                          } catch (error) {
+                            toast.error(
+                              error.message || t("book.bookingError")
+                            );
+                          } finally {
+                            setIsSubmitting(false);
+                          }
+                        }}
+                        disabled={isSubmitting}
                       >
                         {t("book.confirmBooking")}
                       </button>
                       <button
                         className="btn btn-secondary"
                         onClick={() => setStep(3)}
+                        disabled={isSubmitting}
                       >
                         {t("book.editInfo")}
                       </button>
